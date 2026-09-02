@@ -1,6 +1,6 @@
 # Exercise 02: World Database – Joins, Grouping, and Data Quality
 
-- Name:
+- Name: Jugurtha Kacimi
 - Course: Database for Analytics
 - Module: 2
 - Database Used: World Database (PostgreSQL)
@@ -24,14 +24,14 @@ When importing records from `worldPGSQL.sql`, **how many cities were imported**?
 
 ### Answer
 
-_Write the number of cities imported._
+4079
 
 ### Screenshot
 
 _Show evidence of how you determined this (for example, a COUNT query)._
 
 ```sql
--- Your SQL here
+SELECT count(*) FROM city;
 ```
 
 ![Q1 Screenshot](screenshots/q1_city_count.png)
@@ -47,7 +47,9 @@ along with the **name of each language spoken in that country**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT country.name AS CountryName, countrylanguage.language AS Language
+FROM country
+JOIN countryLanguage ON country.Code = countryLanguage.countrycode
 ```
 
 ### Screenshot
@@ -65,7 +67,10 @@ of each **official language spoken in that country**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT country.name AS CountryName, countrylanguage.language AS Language
+FROM country
+JOIN countryLanguage ON country.Code = countryLanguage.countrycode
+WHERE countrylanguage.isofficial = 'T'
 ```
 
 ### Screenshot
@@ -96,7 +101,7 @@ ON country.code = countrylanguage.countrycode;
 
 ### Answer
 
-_Write your explanation here._
+The first query returns only a list of countries that have at least one language associated with them. The second query returns all countries, including those that do not have any languages associated with them. For countries without any languages, the language fields will be NULL in the result set.
 
 ---
 
@@ -109,7 +114,7 @@ Do **not** repeat any form of government more than once.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT DISTINCT (governmentform) FROM country
 ```
 
 ### Screenshot
@@ -127,7 +132,9 @@ Label the column **"City or Country Name"**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT name AS "City or Country Name" FROM city
+UNION
+SELECT name AS "City or Country Name" FROM country
 ```
 
 ### Screenshot
@@ -146,7 +153,11 @@ Be sure to **sort by country name**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT country.name AS CountryName, COUNT(countrylanguage.language) AS LanguageCount
+FROM country
+JOIN countrylanguage ON country.code = countrylanguage.countrycode
+GROUP BY country.name
+ORDER BY country.name
 ```
 
 ### Screenshot
@@ -165,7 +176,10 @@ Be sure to **sort by language name**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT countrylanguage.language AS Language, COUNT(countrylanguage.countrycode) AS CountryCount
+FROM countrylanguage
+GROUP BY countrylanguage.language
+ORDER BY countrylanguage.language
 ```
 
 ### Screenshot
@@ -185,7 +199,7 @@ _Hint: There are 8 such countries in this dataset._
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT country.name AS CountryName, COUNT(countrylanguage.language) AS OfficialLanguageCount
 ```
 
 ### Screenshot
@@ -205,7 +219,9 @@ since some rows use that instead of actual data.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT name AS CityName, district
+FROM city
+WHERE district IS NULL OR district = '-' OR district = ''
 ```
 
 ### Screenshot
@@ -224,7 +240,9 @@ _Hint: The result should be approximately 0.4%._
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT name AS CityName, district
+FROM city
+WHERE district IS NULL OR district = '-' OR district = ''
 ```
 
 ### Screenshot
