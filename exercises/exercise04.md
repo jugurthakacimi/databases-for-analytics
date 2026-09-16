@@ -1,8 +1,8 @@
 # Exercise 04: Advanced SQL, Jupyter, and Visualization
 
-- Name:
+- Name: Jugurtha Kacimi
 - Course: Database for Analytics
-- Module:
+- Module: 04
 - Database Used: World Database
 - Tools Used: PostgreSQL, SQLAlchemy, Pandas, Jupyter Notebooks
 
@@ -34,7 +34,13 @@ along with the **number of official languages spoken**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT country.name, COUNT(countrylanguage.language) AS countLanguage
+FROM country
+JOIN countrylanguage ON country.code = countrylanguage.countrycode
+WHERE countrylanguage.isofficial = 'T'
+GROUP BY country.name
+HAVING COUNT(countrylanguage.language) > 2
+ORDER BY countLanguage DESC
 ```
 
 ### Screenshot
@@ -57,6 +63,16 @@ execute the query from Question 1 and
 
 ```python
 # Your three Python statements here
+query = """SELECT country.name, COUNT(countrylanguage.language) AS countLanguage
+FROM country
+JOIN countrylanguage ON country.code = countrylanguage.countrycode
+WHERE countrylanguage.isofficial = 'T'
+GROUP BY country.name
+HAVING COUNT(countrylanguage.language) > 2
+ORDER BY countLanguage DESC
+"""
+df = pd.read_sql(query, engine)
+df
 ```
 
 ### Screenshot
@@ -77,7 +93,16 @@ to produce the following graph:
 ### Python Code
 
 ```python
-# Your Python code here
+import matplotlib.pyplot as plt
+
+plt.bar(df["name"], df["num_languages"])
+
+plt.xlabel("name")
+plt.ylabel("num_languages")
+
+plt.xticks(rotation=90)
+
+plt.show()
 ```
 
 ### Screenshot
