@@ -1,8 +1,8 @@
 # Exercise 05: SQLDA Database - Dates, Data Quality, Arrays, and JSON
 
-- Name:
+- Name: Jugurtha Kacimi
 - Course: Database for Analytics
-- Module:
+- Module: 05
 - Database Used: `sqlda` (Sample Datasets)
 - Tools Used: PostgreSQL (pgAdmin or psql)
 
@@ -43,7 +43,9 @@ year
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT DISTINCT EXTRACT(YEAR FROM sent_date) AS year
+FROM emails
+ORDER BY year ASC
 ```
 
 ### Screenshot
@@ -68,7 +70,10 @@ count   year
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT COUNT(email_id), EXTRACT(YEAR FROM sent_date) AS year
+FROM emails
+GROUP BY year
+ORDER BY year ASC
 ```
 
 ### Screenshot
@@ -90,7 +95,9 @@ Only include emails that contain **both** a sent date and an opened date.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT sent_date, opened_date, opened_date - sent_date AS interval
+FROM emails
+WHERE sent_date IS NOT NULL AND opened_date IS NOT NULL
 ```
 
 ### Screenshot
@@ -108,7 +115,7 @@ show emails that contain an **opened date BEFORE the sent date**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT * FROM emails WHERE opened_date < sent_date
 ```
 
 ### Screenshot
@@ -127,7 +134,7 @@ After looking at the data, **why is this the case?**
 
 ### Answer
 
-_Write your explanation here._
+The dates returned are timestamps without timezone. The emails were sent from different timezones, which is why the opened date appears to be before the sent date.
 
 ### Screenshot (if requested by instructor)
 
@@ -168,7 +175,7 @@ CREATE TEMP TABLE customer_dealership_distance AS (
 
 ### Answer
 
-_Write your explanation here._
+This code creates temporary tables to store geographic points for customers and dealerships, then calculates the distance between each customer and every dealership.
 
 ---
 
@@ -188,7 +195,10 @@ For example - dealership 1 is below:
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT dealership_id, ARRAY_AGG(last_name || ',' || first_name)
+FROM salespeople
+GROUP BY dealership_id
+ORDER BY dealership_id
 ```
 
 ### Screenshot
@@ -214,7 +224,10 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT d.dealership_id, d.state, COUNT(s.salesperson_id), ARRAY_AGG(s.last_name || ',' || s.first_name)
+FROM salespeople s join dealerships d ON s.dealership_id = d.dealership_id
+GROUP BY d.dealership_id , d.state
+ORDER BY d.dealership_id
 ```
 
 ### Screenshot
@@ -231,7 +244,7 @@ the **customers** table to **JSON**.
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT ROW_TO_JSON(customers) FROM customers
 ```
 
 ### Screenshot
@@ -258,7 +271,10 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT ROW_TO_JSON(t) FROM (SELECT d.dealership_id, d.state, COUNT(s.salesperson_id), ARRAY_AGG(s.last_name || ',' || s.first_name)
+FROM salespeople s join dealerships d ON s.dealership_id = d.dealership_id
+GROUP BY d.dealership_id , d.state
+ORDER BY d.state) t
 ```
 
 ### Screenshot
