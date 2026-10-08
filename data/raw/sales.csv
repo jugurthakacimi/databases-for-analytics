@@ -1,4 +1,4 @@
-﻿InvoiceNo,ProductID,CustomerID,Quantity,InvoiceDate
+﻿InvoiceID,ProductID,CustomerID,Quantity,InvoiceDate
 536365,85123A,17850,6,12/1/2010 8:26
 536365,71053,17850,6,12/1/2010 8:26
 536365,84406B,17850,8,12/1/2010 8:26
